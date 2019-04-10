@@ -11,13 +11,11 @@ django.setup()
 from moviegeeks.models import Movie, Genre
 
 
-def create_movie(movie_id, title, genres):
+def create_movie(movie_id, title, year, genres):
     movie = Movie.objects.get_or_create(movie_id=movie_id)[0]
 
-    title_and_year = title.split(sep="(")
-
-    movie.title = title_and_year[0]
-    movie.year = title_and_year[1][:-1]
+    movie.title = title.replace('"', '')
+    movie.year = year
 
     if genres:
         for genre in genres.split(sep="|"):
@@ -31,7 +29,7 @@ def create_movie(movie_id, title, genres):
 
 
 def download_movies():
-    URL = 'https://raw.githubusercontent.com/sidooms/MovieTweetings/master/latest/movies.dat'
+    URL = 'https://raw.githubusercontent.com/Fir3st/hybrid-recommender-app/master/server/src/utils/data/movies.dat'
     response = urllib.request.urlopen(URL)
     data = response.read()
     return data.decode('utf-8')
@@ -51,10 +49,10 @@ def populate():
     print('movie data downloaded')
 
     for movie in tqdm(movies.split(sep="\n")):
-        m = movie.split(sep="::")
-        if len(m) == 3:
+        m = movie.split(sep=";")
+        if len(m) == 4:
 
-            create_movie(m[0], m[1], m[2])
+            create_movie(m[0], m[1], m[2], m[3])
 
 
 if __name__ == '__main__':

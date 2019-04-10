@@ -14,7 +14,7 @@ from analytics.models import Rating
 
 def create_rating(user_id, content_id, rating, timestamp):
 
-    rating = Rating(user_id=user_id, movie_id=content_id, rating=decimal.Decimal(rating),
+    rating = Rating(user_id=user_id, movie_id=content_id, rating=float(rating),
                     rating_timestamp=datetime.datetime.fromtimestamp(float(timestamp)))
     rating.save()
 
@@ -22,7 +22,7 @@ def create_rating(user_id, content_id, rating, timestamp):
 
 
 def download_ratings():
-    URL = 'https://raw.githubusercontent.com/sidooms/MovieTweetings/master/latest/ratings.dat'
+    URL = 'https://raw.githubusercontent.com/Fir3st/hybrid-recommender-app/master/server/src/utils/data/ratings.dat'
     response = urllib.request.urlopen(URL)
     data = response.read()
 
@@ -43,7 +43,7 @@ def populate():
     ratings = download_ratings()
 
     for rating in tqdm(ratings.split(sep="\n")):
-        r = rating.split(sep="::")
+        r = rating.split(sep=";")
         if len(r) == 4:
             create_rating(r[0], r[1], r[2], r[3])
 
