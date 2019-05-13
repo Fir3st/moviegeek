@@ -14,7 +14,7 @@ from analytics.models import Rating
 
 def create_rating(user_id, content_id, rating, timestamp):
 
-    rating = Rating(user_id=user_id, movie_id=content_id, rating=float(rating),
+    rating = Rating(user_id=user_id, movie_id=content_id, rating=float(rating) * 2,
                     rating_timestamp=datetime.datetime.fromtimestamp(float(timestamp)))
     rating.save()
 

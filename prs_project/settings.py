@@ -76,12 +76,12 @@ WSGI_APPLICATION = 'prs_project.wsgi.application'
 # }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'moviegeek',
-        'USER': 'root',
-        'PASSWORD': '',
+        'USER': 'postgres',
+        'PASSWORD': 'password',
         'HOST': 'localhost',
-        'PORT': 3306
+        'PORT': 32768
     }
 }
 

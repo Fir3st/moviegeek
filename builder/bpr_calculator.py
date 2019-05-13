@@ -215,7 +215,8 @@ if __name__ == '__main__':
     logger = logging.getLogger('BPR calculator')
 
     train_data = load_all_ratings(1)
-    bpr = BayesianPersonalizationRanking(save_path='./models/bpr/{}/'.format(datetime.now()))
+    date = str(datetime.now())
+    bpr = BayesianPersonalizationRanking(save_path='./models/bpr/{}/'.format(date.replace(':', '_')))
     bpr.train(train_data, 10, 20)
 
 
