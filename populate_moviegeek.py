@@ -29,7 +29,7 @@ def create_movie(movie_id, title, year, genres):
 
 
 def download_movies():
-    URL = 'https://raw.githubusercontent.com/Fir3st/hybrid-recommender-app/master/server/src/utils/data/movies.dat'
+    URL = 'https://raw.githubusercontent.com/Fir3st/hybrid-recommender-app/master/server/src/utils/data/output/movies.dat'
     response = urllib.request.urlopen(URL)
     data = response.read()
     return data.decode('utf-8')

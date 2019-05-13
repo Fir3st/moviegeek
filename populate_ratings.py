@@ -22,7 +22,7 @@ def create_rating(user_id, content_id, rating, timestamp):
 
 
 def download_ratings():
-    URL = 'https://raw.githubusercontent.com/Fir3st/hybrid-recommender-app/master/server/src/utils/data/ratings.dat'
+    URL = 'https://raw.githubusercontent.com/Fir3st/hybrid-recommender-app/master/server/src/utils/data/output/ratings.dat'
     response = urllib.request.urlopen(URL)
     data = response.read()
 
