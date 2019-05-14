@@ -1,6 +1,6 @@
 import os
 import sqlite3
-import tqdm
+from tqdm import tqdm
 import psycopg2
 from scipy.sparse import coo_matrix
 
@@ -47,7 +47,7 @@ def cosine_similarity(ldas):
     for i in range(ldas.shape[0]):
 
         for j in range(ldas.shape[0]):
-            similarity_matrix[i, j] = vector_cos(ldas[i,], ldas[j, ])
+            similarity_matrix[i, j] = vector_cos(ldas[i,], ldas[j,])
 
     return similarity_matrix
 
@@ -68,7 +68,7 @@ class LdaModel(object):
         self.min_sim = min_sim
         self.db = settings.DATABASES['default']['ENGINE']
 
-    def train(self, data = None, docs = None):
+    def train(self, data=None, docs=None):
 
         if data is None:
             data, docs = load_data()
@@ -99,8 +99,8 @@ class LdaModel(object):
             stopped_tokens = self.remove_stopwords(tokens)
 
             stemmed_tokens = stopped_tokens
-            #stemmer = PorterStemmer()
-            #stemmed_tokens = [stemmer.stem(token) for token in stopped_tokens]
+            # stemmer = PorterStemmer()
+            # stemmed_tokens = [stemmer.stem(token) for token in stopped_tokens]
 
             texts.append(stemmed_tokens)
 
@@ -109,7 +109,7 @@ class LdaModel(object):
         corpus = [dictionary.doc2bow(text) for text in texts]
 
         lda_model = models.ldamodel.LdaModel(corpus=corpus, id2word=dictionary,
-                                                 num_topics=n_topics)
+                                             num_topics=n_topics)
 
         index = similarities.MatrixSimilarity(corpus)
 
@@ -121,7 +121,8 @@ class LdaModel(object):
     def save_lda_model(self, lda_model, corpus, dictionary, index):
 
         index.save(self.lda_path + 'index.lda')
-        pyLDAvis.save_json(pyLDAvis.gensim.prepare(lda_model, corpus, dictionary), self.lda_path + '/../static/js/lda.json')
+        pyLDAvis.save_json(pyLDAvis.gensim.prepare(lda_model, corpus, dictionary),
+                           self.lda_path + '/../static/js/lda.json')
         print(lda_model.print_topics())
         lda_model.save(self.lda_path + 'model.lda')
 
@@ -153,7 +154,7 @@ class LdaModel(object):
 
         print(f'instantiation of coo_matrix in {datetime.now() - start_time} seconds')
 
-        conn= self.get_conn()
+        conn = self.get_conn()
         cur = conn.cursor()
 
         cur.execute('truncate table lda_similarity')
@@ -189,7 +190,7 @@ class LdaModel(object):
 
         query = "insert into lda_similarity (created, source, target, similarity) values %s;"
 
-        conn= self.get_conn()
+        conn = self.get_conn()
         cur = conn.cursor()
 
         cur.execute('truncate table lda_similarity')
@@ -226,15 +227,19 @@ class LdaModel(object):
             dbUsername = settings.DATABASES['default']['USER']
             dbPassword = settings.DATABASES['default']['PASSWORD']
             dbName = settings.DATABASES['default']['NAME']
-            conn_str = "dbname={} user={} password={}".format(dbName,
-                                                              dbUsername,
-                                                              dbPassword)
+            port = settings.DATABASES['default']['PORT']
+            conn_str = "dbname={} user={} password={} port={}".format(dbName,
+                                                                      dbUsername,
+                                                                      dbPassword,
+                                                                      port)
             conn = psycopg2.connect(conn_str)
         elif settings.DATABASES['default']['ENGINE'] == 'django.db.backends.sqlite3':
             dbName = settings.DATABASES['default']['NAME']
             conn = sqlite3.connect(dbName)
 
         return conn
+
+
 if __name__ == '__main__':
     print("Calculating lda model...")
 

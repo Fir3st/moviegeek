@@ -4,6 +4,8 @@ import django
 import json
 import requests
 import time
+import urllib.request
+from tqdm import tqdm
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'prs_project.settings')
 
@@ -15,31 +17,46 @@ start_date = "1970-01-01"
 
 
 def get_descriptions():
+    # MovieDescriptions.objects.all().delete()
 
-    url = """https://api.themoviedb.org/3/discover/movie?primary_release_date.gte={}&api_key={}&page={}"""
+    movies = download_movies()
+
+    print('movie data downloaded')
+
     api_key = get_api_key()
+    omdb_key = get_omdb_key()
 
-    #MovieDescriptions.objects.all().delete()
+    omdb_url = """http://www.omdbapi.com/?i=tt{}&apikey={}"""
+    tmdb_url = """https://api.themoviedb.org/3/{}/tt{}?api_key={}&external_source=imdb_id"""
+    movies = movies.split(sep="\n")
 
-    for page in range(1, NUMBER_OF_PAGES):
-        formated_url = url.format(start_date, api_key, page)
-        print(formated_url)
-        r = requests.get(formated_url)
-        for film in r.json()['results']:
-            id = film['id']
-            md = MovieDescriptions.objects.get_or_create(movie_id=id)[0]
+    for movie in tqdm(movies[1:]):
+        m = movie.split(sep=",")
+        r = requests.get(omdb_url.format(m[1], omdb_key))
+        omdb_result = r.json()
+        t = 'movie' if omdb_result.get('Type') == 'movie' else 'tv'
+        r = requests.get(tmdb_url.format(t, m[1], api_key))
+        tmdb_result = r.json()
 
-            md.imdb_id = get_imdb_id(id)
-            md.title = film['title']
-            md.description = film['overview']
-            md.genres = film['genre_ids']
-            if None != md.imdb_id:
-                md.save()
+        id = m[2]
+        imdb_id = f"tt{m[1]}"
+        print(f"Movie: {omdb_result.get('Title')}, id: {id}, IMDB ID: {imdb_id}")
+        md = MovieDescriptions.objects.get_or_create(movie_id=id)[0]
 
-        time.sleep(1)
+        md.imdb_id = imdb_id
+        md.title = omdb_result.get('Title')
+        md.description = omdb_result.get('Plot')
+        genres = tmdb_result['genres'] if 'genres' in tmdb_result else []
+        md.genres = [genres[i].get('id') for i in range(len(genres))]
+        if None != md.imdb_id:
+            md.save()
 
-        print("{}: {}".format(page, r.json()))
 
+def download_movies():
+    URL = 'https://raw.githubusercontent.com/Fir3st/hybrid-recommender-app/master/server/src/utils/data/filtered/links.csv'
+    response = urllib.request.urlopen(URL)
+    data = response.read()
+    return data.decode('utf-8')
 
 def save_as_csv():
     url = """https://api.themoviedb.org/3/discover/movie?primary_release_date.gte=2016-01-01
@@ -88,6 +105,12 @@ def get_api_key():
     # Load credentials
     cred = json.loads(open(".prs").read())
     return cred['themoviedb_apikey']
+
+
+def get_omdb_key():
+    # Load credentials
+    cred = json.loads(open(".prs").read())
+    return cred['omdb_key']
 
 
 def get_popular_films_for_genre(genre_str):

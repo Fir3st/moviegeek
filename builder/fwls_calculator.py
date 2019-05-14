@@ -8,6 +8,7 @@ django.setup()
 
 import pickle
 import logging
+from datetime import datetime
 
 import pandas as pd
 from sklearn import linear_model
@@ -125,11 +126,13 @@ if __name__ == '__main__':
     logger = logging.getLogger('funkSVD')
     logger.info("[BEGIN] Calculating Feature Weighted Linear Stacking...")
 
-    if not os.path.exists("./models/lda/model.lda"):
+    if not os.path.exists("./lda/model.lda"):
         logger.error("lda model should be done first. please run the lda_model_calculator.py script")
         exit()
 
-    fwls = FWLSCalculator(data_size=1000)
+    date = str(datetime.now())
+    save_path = './models/fwls/{}/'.format(date.replace(':', '_'))
+    fwls = FWLSCalculator(save_path=save_path, data_size=1000)
     fwls.get_real_training_data()
     logger.info(fwls.train_data)
 

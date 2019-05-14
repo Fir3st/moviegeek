@@ -319,7 +319,9 @@ if __name__ == '__main__':
     logger = logging.getLogger('funkSVD')
     logger.info("[BEGIN] Calculating matrix factorization")
 
-    MF = MatrixFactorization(save_path='./models/funkSVD/{}/'.format(datetime.now()), max_iterations=40)
+    date = str(datetime.now())
+    save_path = './models/funkSVD/{}/'.format(date.replace(':', '_'))
+    MF = MatrixFactorization(save_path=save_path, max_iterations=40)
     loaded_ratings = load_all_ratings(20)
     logger.info("using {} ratings".format(loaded_ratings.shape[0]))
     #MF.meta_parameter_train(loaded_ratings)

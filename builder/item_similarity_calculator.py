@@ -137,9 +137,11 @@ class ItemSimilarityMatrixBuilder(object):
             dbUsername = settings.DATABASES['default']['USER']
             dbPassword = settings.DATABASES['default']['PASSWORD']
             dbName = settings.DATABASES['default']['NAME']
-            conn_str = "dbname={} user={} password={}".format(dbName,
-                                                              dbUsername,
-                                                              dbPassword)
+            port = settings.DATABASES['default']['PORT']
+            conn_str = "dbname={} user={} password={} port={}".format(dbName,
+                                                                      dbUsername,
+                                                                      dbPassword,
+                                                                      port)
             conn = psycopg2.connect(conn_str)
         elif settings.DATABASES['default']['ENGINE'] == 'django.db.backends.sqlite3':
             dbName = settings.DATABASES['default']['NAME']
