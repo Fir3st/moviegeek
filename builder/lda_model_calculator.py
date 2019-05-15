@@ -167,8 +167,8 @@ class LdaModel(object):
                 continue
 
             sim = float(csr[x, y])
-            x_id = str(docs[x].movie_id)
-            y_id = str(docs[y].movie_id)
+            x_id = str(docs[x].imdb_id[2:])
+            y_id = str(docs[y].imdb_id[2:])
             if sim < self.min_sim:
                 continue
 
@@ -203,8 +203,8 @@ class LdaModel(object):
                 continue
 
             sim = float(csr[x, y])
-            x_id = str(docs[x].movie_id)
-            y_id = str(docs[y].movie_id)
+            x_id = str(docs[x].imdb_id[2:])
+            y_id = str(docs[y].imdb_id[2:])
             if sim < self.min_sim:
                 continue
 
