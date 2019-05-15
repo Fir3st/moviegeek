@@ -51,6 +51,8 @@ def get_descriptions():
         if None != md.imdb_id:
             md.save()
 
+        time.sleep(1)
+
 
 def download_movies():
     URL = 'https://raw.githubusercontent.com/Fir3st/hybrid-recommender-app/master/server/src/utils/data/filtered/links.csv'

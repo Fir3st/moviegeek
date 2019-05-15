@@ -14,7 +14,7 @@ from recs.base_recommender import base_recommender
 
 class FunkSVDRecs(base_recommender):
 
-    def __init__(self, save_path='./models/funkSVD/2019-05-14 09_09_01.735421/model/'):
+    def __init__(self, save_path='./models/funkSVD/2019-05-15 07_37_47.068462/model/'):
         self.save_path = save_path
         self.model_loaded = False
         self.avg = Decimal(list(Rating.objects.all().aggregate(Avg('rating')).values())[0])

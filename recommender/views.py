@@ -166,7 +166,9 @@ def recs_cb(request, user_id, num=6):
     return JsonResponse(data, safe=False)
 
 def recs_fwls(request, user_id, num=6):
-    sorted_items = FeatureWeightedLinearStacking().recommend_items(user_id, num)
+    fwls = FeatureWeightedLinearStacking()
+    fwls.set_save_path('./models/fwls/2019-05-15 07_50_41.196261/')
+    sorted_items = fwls.recommend_items(user_id, num)
 
     data = {
         'user_id': user_id,
