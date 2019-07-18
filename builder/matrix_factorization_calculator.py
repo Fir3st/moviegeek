@@ -320,7 +320,7 @@ if __name__ == '__main__':
     logger.info("[BEGIN] Calculating matrix factorization")
 
     date = str(datetime.now())
-    save_path = './models/funkSVD/{}/'.format(date.replace(':', '_'))
+    save_path = './models/funkSVD'
     MF = MatrixFactorization(save_path=save_path, max_iterations=40)
     loaded_ratings = load_all_ratings(20)
     logger.info("using {} ratings".format(loaded_ratings.shape[0]))

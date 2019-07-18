@@ -131,7 +131,7 @@ if __name__ == '__main__':
         exit()
 
     date = str(datetime.now())
-    save_path = './models/fwls/{}/'.format(date.replace(':', '_'))
+    save_path = './models/fwls'
     fwls = FWLSCalculator(save_path=save_path, data_size=1000)
     fwls.get_real_training_data()
     logger.info(fwls.train_data)
