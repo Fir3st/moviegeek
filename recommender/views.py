@@ -167,7 +167,7 @@ def recs_cb(request, user_id, num=6):
 
 def recs_fwls(request, user_id, num=6):
     fwls = FeatureWeightedLinearStacking()
-    fwls.set_save_path('./models/fwls/')
+    fwls.set_save_path('./models/fwls/model/')
     sorted_items = fwls.recommend_items(user_id, num)
 
     data = {
